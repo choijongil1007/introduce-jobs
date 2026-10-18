@@ -140,15 +140,6 @@ table.cmp td:first-child { font-weight: 700; white-space: nowrap; }
 .table-scroll { overflow-x: auto; }
 .back { background: none; border: 0; color: var(--navy2); font-weight: 700; font-size: 14px; padding: 0; }
 
-/* 공고 해독기 */
-textarea { width: 100%; min-height: 180px; border: 1.5px solid var(--line); border-radius: 12px; padding: 14px; font: inherit; font-size: 14px; resize: vertical; color: var(--ink); background: #fff; }
-textarea:focus { outline: 2px solid var(--blue); outline-offset: 1px; border-color: transparent; }
-.hits { margin-top: 6px; font-size: 13px; color: var(--ink2); }
-.hits mark { background: #ccfbf1; color: #064e46; padding: 1px 6px; border-radius: 6px; margin-right: 4px; font-weight: 600; }
-.examples { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
-.examples button { font-size: 12.5px; padding: 5px 10px; border-radius: 99px; border: 1px solid var(--line); background: #fff; color: var(--ink2); font-weight: 600; }
-.examples button:hover { border-color: var(--blue); color: var(--blue); }
-
 footer { text-align: center; color: var(--muted); font-size: 12.5px; padding: 0 20px 40px; }
 
 @media (max-width: 760px) {
@@ -178,7 +169,6 @@ footer { text-align: center; color: var(--muted); font-size: 12.5px; padding: 0 
       <button class="tab" data-go="home">홈</button>
       <button class="tab" data-go="quiz">적합성 진단</button>
       <button class="tab" data-go="atlas">직무 도감</button>
-      <button class="tab" data-go="decoder">공고 해독기</button>
     </nav>
   </div>
 </header>
@@ -207,7 +197,7 @@ footer { text-align: center; color: var(--muted); font-size: 12.5px; padding: 0 
     <div class="grid3">
       <div class="card step"><b>1</b><h3>26개 문항에 답하기</h3><p class="muted small">평소의 나를 떠올리며 "그렇다 ↔ 아니다"로 솔직하게 선택하세요. 정답은 없습니다.</p></div>
       <div class="card step"><b>2</b><h3>적합 직무 Top 3 확인</h3><p class="muted small">10개 직무와의 일치도, 나의 강점·보완 역량을 레이더 차트로 보여드립니다.</p></div>
-      <div class="card step"><b>3</b><h3>직무 도감으로 깊이 보기</h3><p class="muted small">KPI·필요 역량·채용공고 속 신호·직무 명칭을 확인하고, 실제 공고도 해독해 보세요.</p></div>
+      <div class="card step"><b>3</b><h3>직무 도감으로 깊이 보기</h3><p class="muted small">KPI·필요 역량·채용공고 속 신호·직무 명칭과 실제 채용공고 예시를 확인하세요.</p></div>
     </div>
     <p class="notice">※ 이 진단은 자기 보고식 문항에 기반한 <b>탐색용 도구</b>입니다. 결과는 가능성을 넓히는 참고 자료이며, 직무 선택을 확정하지 않습니다.
       답변은 이 브라우저에만 저장되고 서버로 전송되지 않습니다.</p>
@@ -299,22 +289,6 @@ footer { text-align: center; color: var(--muted); font-size: 12.5px; padding: 0 
     </div>
   </section>
 
-  <!-- 공고 해독기 -->
-  <section class="view" id="v-decoder" hidden>
-    <div class="card">
-      <h2>채용공고 해독기</h2>
-      <p class="muted small" style="margin-bottom:12px">직무명만 봐서는 헷갈릴 때, 공고 본문을 붙여넣어 보세요. 공고 속 신호(키워드)로 어떤 직무에 가까운지 알려드립니다.
-        (분석은 브라우저 안에서만 이루어집니다.)</p>
-      <textarea id="d-text" placeholder="채용공고의 업무/자격요건 내용을 붙여넣으세요. 한국어·영어 모두 가능합니다."></textarea>
-      <div class="examples no-print"><span class="muted small" style="align-self:center">예시 불러오기:</span><span id="d-examples" style="display:contents"></span></div>
-    </div>
-    <div class="card" id="d-out" hidden>
-      <h3 style="margin-bottom:8px">해독 결과</h3>
-      <div id="d-bars"></div>
-      <p class="muted small" id="d-note" style="margin-top:12px"></p>
-    </div>
-  </section>
-
 </main>
 <footer>AI 테크기업 직무 이해 · 세미나 실습용 · 내용 출처: 세미나 자료(2026.10.22)</footer>
 
@@ -394,8 +368,7 @@ const ROLES = [
     signals: ["\"구축\", \"개발\", \"코드 리뷰\"", "구체적 기술스택(언어/프레임워크)", "\"고객\" 언급 거의 없음"],
     titles: ["R&D", "Solution Engineer", "Product Owner", "Product Manager"],
     w: { CODE: 3, TECH: 3, DIAG: 2, STRAT: 1, PM: 1, STAB: 1 },
-    sample: ["GE — Staff Software Engineer", "복잡한 소프트웨어 시스템의 설계·개발, 아키텍처 의사결정, 엔지니어링 베스트 프랙티스·코딩 표준 수립, C++/C# 등 객체지향 경험."],
-    kw: ["architectural decision", "code review", "coding standard", "software engineer", "design and development", "best practices", "c++", "c#", "아키텍처", "코드 리뷰", "개발자", "프레임워크"] },
+    sample: ["GE — Staff Software Engineer", "복잡한 소프트웨어 시스템의 설계·개발, 아키텍처 의사결정, 엔지니어링 베스트 프랙티스·코딩 표준 수립, C++/C# 등 객체지향 경험."] },
   { id: "marketing", name: "마케팅", en: "Growth / Content / Demand Gen Marketer",
     tag: "고객에게 문제 인식을 심고 브랜드 신뢰를 쌓아 파이프라인을 채우는 직무", stages: [1],
     kpi: ["리드 수(MQL), 리드 품질(전환율)", "브랜드 인지도, 캠페인 ROI"],
@@ -403,8 +376,7 @@ const ROLES = [
     signals: ["\"리드 제너레이션\", \"퍼널 최적화\"", "\"캠페인 기획\", \"브랜드 포지셔닝\""],
     titles: ["Growth Marketer(성과·전환 중심)", "Content Marketer", "Demand Gen Marketer(파이프라인 중심)"],
     w: { CREA: 3, DATA: 2, COMM: 2, STRAT: 1, TECH: 1, DRIVE: 1 },
-    sample: ["OpenAI — B2B Marketing Lead, Korea", "B2B 마케팅 플랜 수립, full-funnel 프로그램, Korea Country/GTM·파트너와 협업, pipeline growth 지원."],
-    kw: ["lead generation", "funnel", "campaign", "brand", "b2b marketing", "content marketing", "pipeline growth", "demand gen", "mql", "go-to-market", "리드 제너레이션", "퍼널", "캠페인", "브랜드 포지셔닝", "마케터", "콘텐츠"] },
+    sample: ["OpenAI — B2B Marketing Lead, Korea", "B2B 마케팅 플랜 수립, full-funnel 프로그램, Korea Country/GTM·파트너와 협업, pipeline growth 지원."] },
   { id: "sales", name: "영업", en: "Account Executive / Account Manager",
     tag: "고객과의 관계를 만들고 계약을 체결시키는 직무", stages: [1, 5],
     kpi: ["매출, Win rate, Quota 달성률", "파이프라인 규모"],
@@ -412,8 +384,7 @@ const ROLES = [
     signals: ["\"할당량(쿼터)\", \"잠재고객 발굴\", \"협상\"", "\"계약 체결\", \"파이프라인 관리\""],
     titles: ["Account Executive(신규 계약 중심)", "Account Manager(기존 고객 관리 중심)"],
     w: { REL: 3, DRIVE: 3, COMM: 2, STRAT: 1, DATA: 1 },
-    sample: ["Anthropic — Enterprise Account Executive", "매출 목표 달성, 신규 계정 확보와 관계 확대, 영업 기회 발굴, 고객 경영진과의 컨설팅형 영업 프로세스 리드."],
-    kw: ["revenue target", "quota", "account executive", "account manager", "new accounts", "opportunities", "sales cycle", "negotiation", "win rate", "expanding relationships", "할당량", "쿼터", "협상", "계약 체결", "신규 고객", "영업"] },
+    sample: ["Anthropic — Enterprise Account Executive", "매출 목표 달성, 신규 계정 확보와 관계 확대, 영업 기회 발굴, 고객 경영진과의 컨설팅형 영업 프로세스 리드."] },
   { id: "salesops", name: "Sales Operation", en: "Sales Operations Manager / RevOps / Sales Enablement",
     tag: "영업 조직이 더 빠르고 정확하게 움직이도록 프로세스·데이터·툴을 설계하는 직무", stages: [1],
     kpi: ["파이프라인 정확도, 예측(forecast) 적중률", "영업 사이클 단축, CRM 데이터 정합성"],
@@ -421,8 +392,7 @@ const ROLES = [
     signals: ["\"CRM 관리\", \"포캐스팅\"", "\"프로세스 개선\", \"세일즈 인핸스먼트\""],
     titles: ["Sales Operations Manager", "RevOps", "Sales Enablement"],
     w: { DATA: 3, STAB: 2, PM: 2, TECH: 1, STRAT: 1, COMM: 1 },
-    sample: ["AWS — Sr. Strategic GTM & Ops Manager", "전략적 운영 파트너, 분기·연간 비즈니스 케이던스, 파이프라인 인스펙션, 리포팅·인사이트, Salesforce 등 도구 활용."],
-    kw: ["crm", "forecast", "salesforce", "sales process", "business cadence", "pipeline inspection", "reporting and insights", "territory", "revops", "enablement", "sales operations", "포캐스팅", "프로세스 개선", "세일즈 인핸스먼트"] },
+    sample: ["AWS — Sr. Strategic GTM & Ops Manager", "전략적 운영 파트너, 분기·연간 비즈니스 케이던스, 파이프라인 인스펙션, 리포팅·인사이트, Salesforce 등 도구 활용."] },
   { id: "bd", name: "사업기획 (BD)", en: "Business Development Manager / Director",
     tag: "플레이북 없는 곳에서 빅딜의 구조를 설계하는 직무", stages: [1],
     kpi: ["빅딜 성사 건수, 딜당 계약규모", "전략적 파트너십 체결 수 — 볼륨보다 임팩트 중심"],
@@ -430,8 +400,7 @@ const ROLES = [
     signals: ["\"전략적 파트너십\", \"대형 계약\"", "\"신사업 개발\", \"C-level 관계\""],
     titles: ["Business Development Manager/Director", "Enterprise Development"],
     w: { STRAT: 3, REL: 3, AMBIG: 2, COMM: 2, CREA: 1, DRIVE: 1 },
-    sample: ["BSI — Business Development Executive", "Key Account 관계 관리, 시장 정보 DB 구축, 신규 사업 이니셔티브 제안, 파이프라인 확보, 경영진 레벨 관계 구축."],
-    kw: ["business development", "strategic partnership", "new business initiatives", "executive-level", "key account", "c-level", "partnership", "전략적 파트너십", "신사업", "사업기획", "대형 계약"] },
+    sample: ["BSI — Business Development Executive", "Key Account 관계 관리, 시장 정보 DB 구축, 신규 사업 이니셔티브 제안, 파이프라인 확보, 경영진 레벨 관계 구축."] },
   { id: "se", name: "세일즈 엔지니어", en: "Solutions Architect / Solutions Engineer / Presales",
     tag: "기술적으로 고객에게 확신을 주어 영업이 계약을 따내도록 돕는 직무", stages: [2],
     kpi: ["Win rate 기여도, POC·데모 성공률", "기술 이슈로 인한 딜 실패율"],
@@ -439,8 +408,7 @@ const ROLES = [
     signals: ["\"기술 발표\", \"데모(시연)\"", "\"PoC(개념검증)\", \"제안요청서(RFP) 대응\""],
     titles: ["Solutions Architect", "Solutions Engineer", "Presales", "Presales Consultant"],
     w: { COMM: 3, TECH: 3, REL: 2, DIAG: 1, CODE: 1, DRIVE: 1 },
-    sample: ["OpenAI — Solution Engineer", "pre-sales 단계의 기술 전문성 제공, 기술 요구사항 명확화, 데모·유스케이스 스코핑·PoC, 고객의 목소리(VoC) 전달."],
-    kw: ["pre-sales", "presales", "demo", "proof of concept", "poc", "rfp", "technical requirements", "solutions engineer", "solution engineer", "solutions architect", "technical presentation", "데모", "시연", "제안요청서", "기술 발표"] },
+    sample: ["OpenAI — Solution Engineer", "pre-sales 단계의 기술 전문성 제공, 기술 요구사항 명확화, 데모·유스케이스 스코핑·PoC, 고객의 목소리(VoC) 전달."] },
   { id: "consultant", name: "컨설턴트", en: "Technical / Solution / Project Consultant",
     tag: "계약된 솔루션이 실제로 고객 환경에서 돌아가게 구축하는 직무", stages: [3],
     kpi: ["구축 일정 준수율, 프로젝트 예산 준수", "구축 후 고객 만족도"],
@@ -448,8 +416,7 @@ const ROLES = [
     signals: ["\"구축(구현)\", \"배포\"", "\"프로젝트 일정 관리\", \"이해관계자 관리\" + 제품/플랫폼 인증 요구"],
     titles: ["Technical Consultant / Solution Consultant", "Project Consultant"],
     w: { PM: 3, DIAG: 2, TECH: 2, REL: 2, AMBIG: 1, CODE: 1 },
-    sample: ["AWS — Delivery Consultant, Security, Professional Services", "고객·파트너 대상 온사이트 기술 engagement, 보안·컴플라이언스 솔루션 구현, 여러 프로젝트에 걸친 hands-on implementation."],
-    kw: ["implementation", "professional services", "delivery consultant", "on-site", "project management", "deployment", "engagement", "consultant", "구축", "배포", "프로젝트 관리", "컨설턴트"] },
+    sample: ["AWS — Delivery Consultant, Security, Professional Services", "고객·파트너 대상 온사이트 기술 engagement, 보안·컴플라이언스 솔루션 구현, 여러 프로젝트에 걸친 hands-on implementation."] },
   { id: "support", name: "서포트 엔지니어", en: "Support Engineer / Technical Account Manager",
     tag: "이미 도입된 솔루션에서 발생하는 기술적 문제를 해결하는 직무", stages: [4],
     kpi: ["티켓 처리 시간(SLA 준수율)", "1차 해결율, 고객 만족도"],
@@ -457,8 +424,7 @@ const ROLES = [
     signals: ["\"트러블슈팅\", \"티켓 처리\", \"SLA(서비스수준협약) 준수\"", "\"대기 근무\", \"L1/L2/L3 단계별 대응\""],
     titles: ["Support Engineer", "Technical Account Manager"],
     w: { DIAG: 3, TECH: 2, STAB: 2, COMM: 1, CODE: 1 },
-    sample: ["Datadog — Technical Support Engineer", "티켓·라이브챗·화면공유로 고객 이슈 해결, 기술 이슈 재현, 제품 데모 인증, 로테이션(주말 포함) 근무 가능."],
-    kw: ["ticket", "troubleshooting", "sla", "escalation", "support engineer", "technical support", "reproduce", "rotating schedule", "on-call", "티켓", "트러블슈팅", "대기 근무", "장애 대응", "l1", "l2"] },
+    sample: ["Datadog — Technical Support Engineer", "티켓·라이브챗·화면공유로 고객 이슈 해결, 기술 이슈 재현, 제품 데모 인증, 로테이션(주말 포함) 근무 가능."] },
   { id: "csm", name: "CSM", en: "Customer Success Manager / Client Success / Renewal Manager",
     tag: "고객이 제품을 계속 쓰고 재계약하도록 관계를 관리하는 직무", stages: [5],
     kpi: ["Retention, NRR(순매출유지율)", "Churn 방지율", "업셀·크로스셀 매출"],
@@ -466,8 +432,7 @@ const ROLES = [
     signals: ["\"갱신(재계약)\", \"이탈(Churn) 방지\", \"온보딩\"", "\"QBR\", \"고객 대변인(Advocate)\""],
     titles: ["Customer Success Executive", "Client Success Manager", "Renewal Manager"],
     w: { LONG: 3, REL: 3, DATA: 2, COMM: 2, DRIVE: 1, PM: 1 },
-    sample: ["Microsoft — Customer Success Account Manager", "핵심 이해관계자와의 관계 관리, 고객 인시던트·에스컬레이션 end-to-end 관리, 성공 계획 수립, customer-facing consulting 경험."],
-    kw: ["customer success", "renewal", "churn", "retention", "onboarding", "qbr", "nrr", "adoption", "customer health", "success plan", "갱신", "재계약", "이탈", "온보딩", "고객 성공"] },
+    sample: ["Microsoft — Customer Success Account Manager", "핵심 이해관계자와의 관계 관리, 고객 인시던트·에스컬레이션 end-to-end 관리, 성공 계획 수립, customer-facing consulting 경험."] },
   { id: "fde", name: "FDE", en: "Forward Deployed Engineer", isNew: true,
     tag: "고객사에 직접 파견되어 현장에서 문제를 파악하고 코드로 즉시 구현하는 엔지니어", stages: [2, 3],
     kpi: ["현장 문제의 해결·구현 속도와 고객 채택(Adoption)", "(슬라이드: 세일즈와 엔지니어링 사이 간극을 메우는 역할)"],
@@ -475,8 +440,7 @@ const ROLES = [
     signals: ["\"Forward Deployed\", \"Applied AI Engineer\", \"Deployment Solutions Engineer\"", "레거시 시스템 통합, 데이터 통합 이슈", "※ 공고의 약 30%는 세일즈 엔지니어를 FDE로 잘못 라벨링 — 실제 코딩 비중 확인 필요"],
     titles: ["Forward Deployed Engineer", "Forward Deployed AI Engineer", "Applied AI Engineer", "Deployment Solutions Engineer"],
     w: { CODE: 3, AMBIG: 3, REL: 2, DIAG: 2, TECH: 2, COMM: 1 },
-    sample: ["FDE 채용 활발 기업 (2026)", "Palantir(원조), OpenAI, Anthropic, Google, Databricks, Salesforce, Deloitte·Accenture 등. 최근 12~18개월 공고 800~1,165% 급증."],
-    kw: ["forward deployed", "forward-deployed", "fde", "applied ai engineer", "deployment solutions", "embedded with customer", "legacy system", "data integration", "현장 상주", "레거시", "데이터 통합"] },
+    sample: ["FDE 채용 활발 기업 (2026)", "Palantir(원조), OpenAI, Anthropic, Google, Databricks, Salesforce, Deloitte·Accenture 등. 최근 12~18개월 공고 800~1,165% 급증."] },
 ];
 
 const ROLE_BY_ID = Object.fromEntries(ROLES.map(r => [r.id, r]));
@@ -522,8 +486,8 @@ function rankRoles(ans) {
 
 /* ───────── 화면 전환 ───────── */
 
-const VIEWS = ["home", "quiz", "result", "atlas", "role", "decoder"];
-const TAB_OF = { home: "home", quiz: "quiz", result: "quiz", atlas: "atlas", role: "atlas", decoder: "decoder" };
+const VIEWS = ["home", "quiz", "result", "atlas", "role"];
+const TAB_OF = { home: "home", quiz: "quiz", result: "quiz", atlas: "atlas", role: "atlas" };
 let answers = Array(QUESTIONS.length).fill(0);
 let qi = 0;
 
@@ -541,7 +505,6 @@ document.addEventListener("click", e => {
   const go = b.dataset.go;
   if (go === "quiz") startOrResume();
   else if (go === "atlas") show("atlas");
-  else if (go === "decoder") show("decoder");
   else show("home");
 });
 
@@ -594,7 +557,7 @@ function prev() { if (qi > 0) { qi--; renderQ(); } }
 $("#q-next").addEventListener("click", next);
 $("#q-prev").addEventListener("click", prev);
 document.addEventListener("keydown", e => {
-  if ($("#v-quiz").hidden || e.target.matches("textarea,input")) return;
+  if ($("#v-quiz").hidden || e.target.matches("input")) return;
   if (/^[1-5]$/.test(e.key)) answer(+e.key);
   else if (e.key === "ArrowRight") next();
   else if (e.key === "ArrowLeft") prev();
@@ -718,44 +681,6 @@ function openRole(id) {
   show("role");
 }
 $("#role-back").addEventListener("click", () => show("atlas"));
-
-/* ───────── 공고 해독기 ───────── */
-
-function kwRegex(k) {
-  const esc = k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  return /^[\x00-\x7f]+$/.test(k) ? new RegExp(`(?<![a-z0-9])${esc}(?![a-z0-9])`, "g") : new RegExp(esc, "g");
-}
-const KW_RE = ROLES.map(r => ({ role: r, res: r.kw.map(k => ({ k, re: kwRegex(k) })) }));
-
-function decode() {
-  const txt = $("#d-text").value.toLowerCase();
-  if (txt.trim().length < 20) { $("#d-out").hidden = true; return; }
-  const res = KW_RE.map(({ role, res }) => {
-    const hits = []; let score = 0;
-    res.forEach(({ k, re }) => { const m = txt.match(re); if (m) { hits.push(k); score += Math.min(m.length, 3); } });
-    return { role, score, hits };
-  }).sort((a, b) => b.score - a.score);
-  const max = Math.max(1, res[0].score);
-  $("#d-out").hidden = false;
-  $("#d-bars").replaceChildren(...res.filter(x => x.score > 0).slice(0, 6).map((x, i) =>
-    el("div", { style: "margin-bottom:10px" },
-      el("div", { class: "bar-row" + (i === 0 ? " top" : ""), style: "padding-bottom:0" },
-        el("button", { type: "button", onclick: () => openRole(x.role.id), text: x.role.name }),
-        el("div", { class: "bar" }, el("i", { style: `width:${(x.score / max) * 100}%` })),
-        el("span", { class: "v small", text: x.score + "점" })),
-      el("div", { class: "hits" }, "감지된 신호: ", x.hits.map(h => el("mark", { text: h }))))));
-  if (!res[0].score) {
-    $("#d-bars").replaceChildren(el("p", { text: "뚜렷한 직무 신호를 찾지 못했어요. 업무(Responsibilities) 항목까지 포함해 붙여넣어 보세요." }));
-    $("#d-note").textContent = "";
-  } else {
-    $("#d-note").textContent = res[0].role.id === "fde"
-      ? "※ FDE 공고의 약 30%는 세일즈 엔지니어 역할을 잘못 라벨링한 경우예요. 실제 코딩 비중을 꼭 확인하세요."
-      : "키워드 기반 추정입니다. 직무명(타이틀)보다 '업무 내용'에 어떤 단어가 많은지를 보는 연습용 도구예요.";
-  }
-}
-$("#d-text").addEventListener("input", decode);
-$("#d-examples").replaceChildren(...ROLES.map(r =>
-  el("button", { type: "button", onclick: () => { $("#d-text").value = r.sample[0] + "\n" + r.sample[1] + "\n" + r.signals.join(", ").replace(/"/g, ""); decode(); } }, r.name)));
 
 /* ───────── 시작 ───────── */
 
