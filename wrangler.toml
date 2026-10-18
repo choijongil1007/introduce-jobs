@@ -1,0 +1,7 @@
+# Cloudflare Workers (정적 파일 assets). Worker 이름은 대시보드의 introduce-jobs 와 같아야 합니다.
+name = "introduce-jobs"
+compatibility_date = "2024-09-23"
+workers_dev = true
+
+[assets]
+directory = "./public"
