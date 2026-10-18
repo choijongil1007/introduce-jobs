@@ -206,7 +206,7 @@ footer { text-align: center; color: var(--muted); font-size: 12.5px; padding: 0 
 
     <div class="grid3">
       <div class="card step"><b>1</b><h3>26개 문항에 답하기</h3><p class="muted small">평소의 나를 떠올리며 "그렇다 ↔ 아니다"로 솔직하게 선택하세요. 정답은 없습니다.</p></div>
-      <div class="card step"><b>2</b><h3>적합 직무 Top 3 확인</h3><p class="muted small">11개 직무와의 일치도, 나의 강점·보완 역량을 레이더 차트로 보여드립니다.</p></div>
+      <div class="card step"><b>2</b><h3>적합 직무 Top 3 확인</h3><p class="muted small">10개 직무와의 일치도, 나의 강점·보완 역량을 레이더 차트로 보여드립니다.</p></div>
       <div class="card step"><b>3</b><h3>직무 도감으로 깊이 보기</h3><p class="muted small">KPI·필요 역량·채용공고 속 신호·직무 명칭을 확인하고, 실제 공고도 해독해 보세요.</p></div>
     </div>
     <p class="notice">※ 이 진단은 자기 보고식 문항에 기반한 <b>탐색용 도구</b>입니다. 결과는 가능성을 넓히는 참고 자료이며, 직무 선택을 확정하지 않습니다.
@@ -265,7 +265,7 @@ footer { text-align: center; color: var(--muted); font-size: 12.5px; padding: 0 
   <section class="view" id="v-atlas" hidden>
     <div class="card">
       <h2>직무 도감</h2>
-      <p class="muted small">AI 테크기업의 직무 11가지. 카드를 눌러 상세 내용을 확인하세요.</p>
+      <p class="muted small">AI 테크기업의 직무 10가지. 카드를 눌러 상세 내용을 확인하세요.</p>
     </div>
     <div class="role-grid" id="atlas-grid"></div>
     <div class="card">
@@ -477,15 +477,6 @@ const ROLES = [
     w: { CODE: 3, AMBIG: 3, REL: 2, DIAG: 2, TECH: 2, COMM: 1 },
     sample: ["FDE 채용 활발 기업 (2026)", "Palantir(원조), OpenAI, Anthropic, Google, Databricks, Salesforce, Deloitte·Accenture 등. 최근 12~18개월 공고 800~1,165% 급증."],
     kw: ["forward deployed", "forward-deployed", "fde", "applied ai engineer", "deployment solutions", "embedded with customer", "legacy system", "data integration", "현장 상주", "레거시", "데이터 통합"] },
-  { id: "corp", damp: 0.88, name: "Corporate · Back Office", en: "HR / Accounting / Legal / IT",
-    tag: "인사·회계·법무·IT로 회사가 안정적으로 굴러가게 하는 직무군", stages: [],
-    kpi: ["(직군별) 인사: 필요한 사람을 뽑고 성장·유지", "회계: 돈의 흐름 추적, 재무 의사결정 지원", "법무: 계약·규제 리스크로부터 회사 보호", "IT: 시스템·인프라 안정 운영, 업무 환경 지원"],
-    skills: ["정확성·꼼꼼함과 절차 준수", "내부 이해관계자 지원", "직군별 전문 지식(노무·회계·법률·인프라)"],
-    signals: ["\"채용·평가·노무\", \"결산·세무\", \"계약 검토·컴플라이언스\", \"사내 시스템 운영\""],
-    titles: ["인사(HR)", "회계", "법무", "IT"],
-    w: { STAB: 3, DATA: 2, PM: 1 },
-    sample: ["직군 안내", "인사: 사람을 뽑고 성장시키고 유지 · 회계: 회사의 돈이 들어오고 나가는 흐름 추적 · 법무: 계약·규제 리스크 보호 · IT: 시스템과 인프라 안정 운영."],
-    kw: ["human resources", "recruiting", "accounting", "legal counsel", "compliance", "payroll", "인사", "회계", "법무", "총무", "세무"] },
 ];
 
 const ROLE_BY_ID = Object.fromEntries(ROLES.map(r => [r.id, r]));
@@ -521,7 +512,7 @@ function dimScores(ans) {
 function roleFit(role, ds) {
   let num = 0, den = 0;
   for (const [d, w] of Object.entries(role.w)) { num += w * ds[d]; den += w; }
-  return Math.round((num / den) * (role.damp || 1));
+  return Math.round(num / den);
 }
 function rankRoles(ans) {
   const ds = dimScores(ans);
@@ -763,7 +754,7 @@ function decode() {
   }
 }
 $("#d-text").addEventListener("input", decode);
-$("#d-examples").replaceChildren(...ROLES.filter(r => r.id !== "corp").map(r =>
+$("#d-examples").replaceChildren(...ROLES.map(r =>
   el("button", { type: "button", onclick: () => { $("#d-text").value = r.sample[0] + "\n" + r.sample[1] + "\n" + r.signals.join(", ").replace(/"/g, ""); decode(); } }, r.name)));
 
 /* ───────── 시작 ───────── */
