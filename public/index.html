@@ -210,7 +210,7 @@ footer { text-align: center; color: var(--muted); font-size: 12.5px; padding: 0 
 
     <div class="grid3">
       <div class="card step"><b>1</b><h3>26개 문항에 답하기</h3><p class="muted small">평소의 나를 떠올리며 "그렇다 ↔ 아니다"로 솔직하게 선택하세요. 정답은 없습니다.</p></div>
-      <div class="card step"><b>2</b><h3>적합 직무 Top 3 확인</h3><p class="muted small">10개 직무와의 일치도, 나의 강점·보완 역량을 레이더 차트로 보여드립니다.</p></div>
+      <div class="card step"><b>2</b><h3>적합 직무 Top 3 확인</h3><p class="muted small">9개 직무와의 일치도, 나의 강점·보완 역량을 레이더 차트로 보여드립니다.</p></div>
       <div class="card step"><b>3</b><h3>직무 도감으로 깊이 보기</h3><p class="muted small">KPI·필요 역량·채용공고 속 신호·직무 명칭과 실제 채용공고 예시를 확인하세요.</p></div>
     </div>
     <p class="notice">※ 이 진단은 자기 보고식 문항에 기반한 <b>탐색용 도구</b>입니다. 결과는 가능성을 넓히는 참고 자료이며, 직무 선택을 확정하지 않습니다.
@@ -270,7 +270,7 @@ footer { text-align: center; color: var(--muted); font-size: 12.5px; padding: 0 
   <section class="view" id="v-atlas" hidden>
     <div class="card">
       <h2>직무 도감</h2>
-      <p class="muted small">AI 테크기업의 직무 10가지. 카드를 눌러 상세 내용을 확인하세요.</p>
+      <p class="muted small">AI 테크기업의 직무 9가지. 카드를 눌러 상세 내용을 확인하세요.</p>
     </div>
     <div class="role-grid" id="atlas-grid"></div>
     <div class="card">
@@ -400,14 +400,6 @@ const ROLES = [
     titles: ["Account Executive(신규 계약 중심)", "Account Manager(기존 고객 관리 중심)"],
     w: { REL: 3, DRIVE: 3, COMM: 2, DATA: 1, STRAT: 1 },
     sample: ["Anthropic — Enterprise Account Executive", "매출 목표 달성, 신규 계정 확보와 관계 확대, 영업 기회 발굴, 고객 경영진과의 컨설팅형 영업 프로세스 리드."] },
-  { id: "salesops", name: "Sales Operation", en: "Sales Operations Manager / RevOps / Sales Enablement",
-    tag: "영업 조직이 더 빠르고 정확하게 움직이도록 프로세스·데이터·툴을 설계하는 직무", stages: [1],
-    kpi: ["파이프라인 정확도, 예측(forecast) 적중률", "영업 사이클 단축, CRM 데이터 정합성"],
-    skills: ["데이터 분석력, 프로세스 설계력", "CRM/툴 운영 능력(Salesforce 등)", "크로스펑셔널 조율력"],
-    signals: ["\"CRM 관리\", \"포캐스팅\"", "\"프로세스 개선\", \"세일즈 인핸스먼트\""],
-    titles: ["Sales Operations Manager", "RevOps", "Sales Enablement"],
-    w: { DATA: 3, PM: 2, STAB: 2, TECH: 1, COMM: 1 },
-    sample: ["AWS — Sr. Strategic GTM & Ops Manager", "전략적 운영 파트너, 분기·연간 비즈니스 케이던스, 파이프라인 인스펙션, 리포팅·인사이트, Salesforce 등 도구 활용."] },
   { id: "bd", name: "사업기획 (BD)", en: "Business Development Manager / Director",
     tag: "플레이북 없는 곳에서 빅딜의 구조를 설계하는 직무", stages: [1],
     kpi: ["빅딜 성사 건수, 딜당 계약규모", "전략적 파트너십 체결 수 — 볼륨보다 임팩트 중심"],
