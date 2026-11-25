@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>IT·SW·AI 직무 적합성 진단</title>
+<title>AI 테크기업 직무 적합성 진단</title>
 <meta name="description" content="IT/SW/AI 기업의 직무를 이해하고, 나에게 맞는 직무를 Self-Assessment 로 찾아보는 세미나 실습 앱">
 <style>
 :root {
@@ -107,6 +107,22 @@ main { padding: 28px 0 64px; }
 .bar i { display: block; height: 100%; background: linear-gradient(90deg, #5f93d8, var(--navy2)); border-radius: 99px; }
 .bar-row.top .bar i { background: linear-gradient(90deg, #5eead4, var(--teal-dark)); }
 .bar-row .v { text-align: right; font-weight: 700; color: var(--ink2); }
+.dl-wrap { position: relative; }
+.dl-menu { position: absolute; z-index: 20; top: calc(100% + 6px); left: 0; width: 300px; max-width: calc(100vw - 40px);
+  background: #fff; border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 8px 24px rgba(15,35,65,.18); padding: 6px; }
+.dl-menu[hidden] { display: none; }
+.dl-menu button { all: unset; box-sizing: border-box; display: block; width: 100%; padding: 10px 12px; border-radius: 8px; cursor: pointer; }
+.dl-menu button:hover, .dl-menu button:focus-visible { background: var(--blue-weak); }
+.dl-menu button:focus-visible { outline: 2px solid var(--blue); }
+.dl-menu b { display: block; font-size: 14px; color: var(--ink); }
+.dl-menu small { display: block; margin-top: 2px; font-size: 12.5px; color: var(--muted); line-height: 1.4; }
+.profile h4 { font-size: 13px; color: var(--muted); margin: 16px 0 6px; font-weight: 700; }
+.profile h4:first-of-type { margin-top: 10px; }
+.profile-top { margin: 0; padding-left: 20px; font-size: 14px; }
+.profile-top li { padding: 2px 0; }
+.profile-tips { margin: 6px 0 0; padding-left: 18px; font-size: 13.5px; color: var(--ink2); }
+.profile .tags { margin-top: 0; }
+.tag.kw { background: #eef2f7; color: var(--ink2); font-weight: 500; }
 .two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
 .radar-box { display: grid; place-items: center; }
 .dim-list { list-style: none; margin: 0; padding: 0; font-size: 14px; }
@@ -157,11 +173,25 @@ footer { text-align: center; color: var(--muted); font-size: 12.5px; padding: 0 
   .topbar, .no-print, footer { display: none !important; }
   body { background: #fff; font-size: 13px; }
   main { padding: 0; max-width: none; }
+  #v-result > * + * { margin-top: 8px; }
   .view > * + * { margin-top: 10px; }
-  .card, .rank { box-shadow: none; break-inside: avoid; padding: 14px; }
+  .card, .rank { box-shadow: none; break-inside: avoid; padding: 12px; }
+  .notice { padding: 8px 12px; font-size: 11.5px; }
+  .dim-list li { padding: 2px 0; }
+  #r-gap ul:not(.dim-list) { font-size: 12.5px !important; }
+  #r-gap ul:not(.dim-list) li:nth-child(n+3) { display: none; } /* 보완 팁 전체는 2쪽 프로필에 있음 */
+  .rank { padding: 10px 12px; }
+  .rank p { font-size: 11.5px; }
+  #r-life-card { padding: 8px 12px; }
+  #r-life-card .life { margin-top: 6px !important; }
+  .rank .tags { margin-top: 6px; }
   .print-head { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid var(--navy2); padding-bottom: 6px; }
   .print-head b { font-size: 17px; color: var(--navy); }
   .print-head span { font-size: 12px; color: var(--muted); }
+  #v-result:not([hidden]) { display: flex; flex-direction: column; }
+  #v-result > * { order: 0; }
+  #r-profile { order: 1; break-before: page; }
+  #r-all-card { order: 2; }
   .top3 { grid-template-columns: repeat(3, 1fr); gap: 10px; }
   .rank .pct { font-size: 26px; }
   .rank h3 { font-size: 16px; }
@@ -178,7 +208,7 @@ footer { text-align: center; color: var(--muted); font-size: 12.5px; padding: 0 
 
 <header class="topbar">
   <div class="wrap">
-    <button class="brand" data-go="home"><i>JF</i>직무 적합성 진단</button>
+    <button class="brand" data-go="home"><i>JF</i>AI 테크기업 직무 적합성 진단</button>
     <nav class="tabs" aria-label="주요 메뉴">
       <button class="tab" data-go="home">홈</button>
       <button class="tab" data-go="quiz">적합성 진단</button>
@@ -193,7 +223,7 @@ footer { text-align: center; color: var(--muted); font-size: 12.5px; padding: 0 
   <section class="view" id="v-home">
     <div class="hero">
       <span class="pill">AI 테크기업 직무 이해 세미나 · 실습</span>
-      <h1>IT·SW·AI 기업의 <em>직무</em>,<br>나는 어디에 맞을까?</h1>
+      <h1>AI 테크기업의 <em>직무</em>,<br>나는 어디에 맞을까?</h1>
       <p>솔루션이 만들어져서 고객에게 닿고 오래 쓰이기까지 — 그 여정에는 서로 다른 일을 하는 여러 직무가 있습니다.
         26개 문항에 답하면 나의 성향과 가장 가까운 직무를 찾아드립니다.</p>
       <div class="cta">
@@ -210,11 +240,11 @@ footer { text-align: center; color: var(--muted); font-size: 12.5px; padding: 0 
 
     <div class="grid3">
       <div class="card step"><b>1</b><h3>26개 문항에 답하기</h3><p class="muted small">평소의 나를 떠올리며 "그렇다 ↔ 아니다"로 솔직하게 선택하세요. 정답은 없습니다.</p></div>
-      <div class="card step"><b>2</b><h3>적합 직무 Top 3 확인</h3><p class="muted small">9개 직무와의 일치도, 나의 강점·보완 역량을 레이더 차트로 보여드립니다.</p></div>
+      <div class="card step"><b>2</b><h3>적합 직무 Top 3 확인</h3><p class="muted small">12개 직무와의 일치도, 나의 강점·보완 역량을 레이더 차트로 보여드립니다.</p></div>
       <div class="card step"><b>3</b><h3>직무 도감으로 깊이 보기</h3><p class="muted small">KPI·필요 역량·채용공고 속 신호·직무 명칭과 실제 채용공고 예시를 확인하세요.</p></div>
     </div>
     <p class="notice">※ 이 진단은 자기 보고식 문항에 기반한 <b>탐색용 도구</b>입니다. 결과는 가능성을 넓히는 참고 자료이며, 직무 선택을 확정하지 않습니다.
-      답변은 이 브라우저에만 저장되고 서버로 전송되지 않습니다.</p>
+      응답과 결과는 이 브라우저에만 저장되며, 서버로 전송되지 않습니다.</p>
   </section>
 
   <!-- 진단 -->
@@ -234,7 +264,7 @@ footer { text-align: center; color: var(--muted); font-size: 12.5px; padding: 0 
 
   <!-- 결과 -->
   <section class="view" id="v-result" hidden>
-    <div class="print-head"><b>IT·SW·AI 직무 적합성 진단 결과</b><span id="print-date"></span></div>
+    <div class="print-head"><b>AI 테크기업 직무 적합성 진단 결과</b><span id="print-date"></span></div>
     <div class="card">
       <h2>나와 가장 가까운 직무</h2>
       <p class="muted small" id="r-sub"></p>
@@ -247,19 +277,30 @@ footer { text-align: center; color: var(--muted); font-size: 12.5px; padding: 0 
         <div id="r-gap" style="margin-top:12px"></div>
       </div>
     </div>
-    <div class="card">
+    <div class="card" id="r-all-card">
       <h3>전체 직무 일치도</h3>
       <p class="muted small" style="margin-bottom:8px">직무명을 누르면 도감으로 이동합니다.</p>
       <div id="r-all"></div>
     </div>
-    <div class="card">
+    <div class="card profile" id="r-profile">
+      <h3>나의 직무 프로필</h3>
+      <p class="muted small">Top 3 직무 기준으로 채용공고를 찾을 때 쓸 직무명과 키워드를 정리했습니다.</p>
+      <div id="r-profile-body"></div>
+    </div>
+    <div class="card" id="r-life-card">
       <h3>솔루션 라이프사이클에서의 위치 (1순위)</h3>
       <div class="life" id="life-result" style="margin-top:12px"></div>
     </div>
-    <p class="notice">일치도는 각 직무가 중요하게 보는 역량(슬라이드의 KPI·필요 역량·채용공고 신호 기반)에 대한 나의 응답 점수를 가중 평균한 값입니다.
+    <p class="notice" id="r-notice">일치도는 각 직무가 중요하게 보는 역량(슬라이드의 KPI·필요 역량·채용공고 신호 기반)에 대한 나의 응답 점수를 가중 평균한 값입니다.
       점수 차이가 작은 직무끼리는 우열보다 <b>둘 다 후보</b>로 보세요.</p>
     <div class="result-actions no-print">
-      <button class="btn solid" id="r-print">📄 PDF로 저장</button>
+      <div class="dl-wrap">
+        <button class="btn solid" id="r-dl" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="dl-menu">⬇ 결과 다운로드</button>
+        <div class="dl-menu" id="dl-menu" role="menu" aria-label="다운로드 형식" hidden>
+          <button type="button" role="menuitem" id="dl-pdf"><b>📄 PDF</b><small>결과지 (인쇄 창이 열리면 'PDF로 저장'을 선택하세요)</small></button>
+          <button type="button" role="menuitem" id="dl-json"><b>{ } JSON</b><small>직무 프로필 데이터 (구직 앱 연결용)</small></button>
+        </div>
+      </div>
       <button class="btn line" id="r-copy">결과 링크 복사</button>
       <button class="btn line" id="r-retry">다시 진단하기</button>
       <button class="btn line" data-go="atlas">직무 도감 보기</button>
@@ -270,7 +311,7 @@ footer { text-align: center; color: var(--muted); font-size: 12.5px; padding: 0 
   <section class="view" id="v-atlas" hidden>
     <div class="card">
       <h2>직무 도감</h2>
-      <p class="muted small">AI 테크기업의 직무 9가지. 카드를 눌러 상세 내용을 확인하세요.</p>
+      <p class="muted small">AI 테크기업의 직무 12가지. 카드를 눌러 상세 내용을 확인하세요.</p>
     </div>
     <div class="role-grid" id="atlas-grid"></div>
     <div class="card">
@@ -305,7 +346,7 @@ footer { text-align: center; color: var(--muted); font-size: 12.5px; padding: 0 
   </section>
 
 </main>
-<footer>AI 테크기업 직무 이해 · 세미나 실습용 · 내용 출처: 세미나 자료(2026.10.22)</footer>
+<footer>AI 테크기업 직무 이해 · 세미나 실습용 · 내용 출처: 세미나 자료(2026.10.22) · 일부 직무 추가(2026.11)</footer>
 
 <script>
 "use strict";
@@ -313,7 +354,7 @@ footer { text-align: center; color: var(--muted); font-size: 12.5px; padding: 0 
 /* ───────── 데이터 ───────── */
 
 const LIFE = [
-  ["솔루션 개발", "R&D · Product"],
+  ["솔루션 개발", "엔지니어 · PM"],
   ["영업기회 발굴", "Marketing · Sales"],
   ["솔루션 검증", "Sales Engineer"],
   ["솔루션 구축", "Consultant"],
@@ -372,33 +413,64 @@ const QUESTIONS = [
 const SCALE = [["1", "전혀 아님"], ["2", "아님"], ["3", "보통"], ["4", "그런 편"], ["5", "매우 그럼"]];
 
 /*
- 직무 정의. w: 차원별 중요도(0~3). 슬라이드의 KPI/필요 역량/채용공고 신호를 근거로 설정.
+ 직무 정의. w: 차원별 중요도. 모든 직무 4개 차원, 3·3·2·1(합 9)로 통일.
+ 슬라이드의 KPI/필요 역량/채용공고 신호를 근거로 설정.
  stages: LIFE 인덱스. sample: 슬라이드의 채용공고 예시.
 */
 const ROLES = [
-  { id: "rnd", name: "R&D · Product", en: "R&D / Solution Engineer / Product Owner / Product Manager",
+  { id: "eng", name: "SW·AI 엔지니어", en: "Software Engineer / AI Engineer / ML Engineer",
     tag: "고객의 요구를 실제로 동작하는 제품·기능으로 개발하는 직무", stages: [0],
     kpi: ["출시 일정 준수, 코드 품질(버그율·장애율), 기술 부채 관리"],
     skills: ["솔루션 설계·코딩 능력", "문제 해결을 위한 논리적 사고", "코드리뷰 등 협업 능력"],
     signals: ["\"구축\", \"개발\", \"코드 리뷰\"", "구체적 기술스택(언어/프레임워크)", "\"고객\" 언급 거의 없음"],
-    titles: ["R&D", "Solution Engineer", "Product Owner", "Product Manager"],
-    w: { CODE: 3, TECH: 3, DIAG: 2, PM: 1, STAB: 1 },
+    titles: ["Software Engineer", "AI Engineer", "ML Engineer", "Backend/Frontend Engineer", "Solution Engineer(개발)"],
+    keywords: ["개발", "코드 리뷰", "백엔드", "프론트엔드", "머신러닝", "LLM"],
+    w: { CODE: 3, TECH: 3, DIAG: 2, STAB: 1 },
     sample: ["GE — Staff Software Engineer", "복잡한 소프트웨어 시스템의 설계·개발, 아키텍처 의사결정, 엔지니어링 베스트 프랙티스·코딩 표준 수립, C++/C# 등 객체지향 경험."] },
+  { id: "pm", name: "PM", en: "Product Manager / Product Owner",
+    tag: "고객과 시장의 문제를 정의하고 무엇을 만들지 결정해 제품을 성공으로 이끄는 직무", stages: [0],
+    kpi: ["제품 로드맵 달성, 출시 후 사용자 지표(활성·리텐션)", "이해관계자 정렬과 일정 준수"],
+    skills: ["문제 정의와 우선순위 판단", "엔지니어·디자이너·현업과의 조율·소통", "사용자 리서치와 데이터 해석"],
+    signals: ["\"제품 기획\", \"로드맵\", \"요구사항 정의\"", "\"사용자 리서치\", \"우선순위\""],
+    titles: ["Product Manager", "Product Owner", "서비스 기획자"],
+    keywords: ["제품 기획", "로드맵", "요구사항 정의", "사용자 리서치", "우선순위"],
+    w: { STRAT: 3, PM: 3, COMM: 2, AMBIG: 1 },
+    sample: null },
+  { id: "data", name: "데이터 분석가", en: "Data Analyst / Data Scientist", isNew: true,
+    tag: "데이터로 현상을 설명하고 의사결정의 근거를 만드는 직무", stages: [],
+    kpi: ["분석 결과의 의사결정 반영도", "지표 체계·대시보드 구축", "데이터 품질"],
+    skills: ["SQL·Python 등 데이터 처리", "가설 설정과 검증", "분석 결과를 쉽게 전달하는 능력"],
+    signals: ["\"SQL\", \"A/B 테스트\", \"지표 설계\"", "\"대시보드\", \"데이터 파이프라인\""],
+    titles: ["Data Analyst", "Data Scientist", "Business Analyst", "Product Analyst"],
+    keywords: ["SQL", "Python", "A/B 테스트", "지표 설계", "대시보드", "데이터 파이프라인"],
+    w: { DATA: 3, TECH: 3, DIAG: 2, COMM: 1 },
+    sample: null },
   { id: "marketing", name: "마케팅", en: "Growth / Content / Demand Gen Marketer",
     tag: "고객에게 문제 인식을 심고 브랜드 신뢰를 쌓아 파이프라인을 채우는 직무", stages: [1],
     kpi: ["리드 수(MQL), 리드 품질(전환율)", "브랜드 인지도, 캠페인 ROI"],
     skills: ["콘텐츠 기획력", "데이터 기반 캠페인 설계", "카피라이팅", "채널별 타게팅 감각"],
     signals: ["\"리드 제너레이션\", \"퍼널 최적화\"", "\"캠페인 기획\", \"브랜드 포지셔닝\""],
     titles: ["Growth Marketer(성과·전환 중심)", "Content Marketer", "Demand Gen Marketer(파이프라인 중심)"],
-    w: { CREA: 3, DATA: 2, COMM: 2, DRIVE: 1, STRAT: 1 },
+    keywords: ["리드 제너레이션", "퍼널", "캠페인 기획", "브랜드 포지셔닝", "B2B 마케팅"],
+    w: { CREA: 3, DATA: 3, COMM: 2, DRIVE: 1 },
     sample: ["OpenAI — B2B Marketing Lead, Korea", "B2B 마케팅 플랜 수립, full-funnel 프로그램, Korea Country/GTM·파트너와 협업, pipeline growth 지원."] },
+  { id: "devrel", name: "DevRel", en: "Developer Relations / Developer Advocate", isNew: true,
+    tag: "개발자에게 제품을 알리고 써보게 만들어 생태계를 키우는 직무", stages: [1, 2],
+    kpi: ["개발자 가입·활성 사용자", "커뮤니티 성장", "기술 콘텐츠 도달·참여"],
+    skills: ["기술을 쉽게 설명하는 발표·글쓰기", "샘플 코드·데모 제작", "커뮤니티 운영"],
+    signals: ["\"Developer Advocate\", \"Developer Experience\"", "\"기술 블로그\", \"컨퍼런스 발표\", \"샘플 코드\""],
+    titles: ["Developer Relations", "Developer Advocate", "Developer Evangelist", "Technical Writer"],
+    keywords: ["개발자 커뮤니티", "기술 블로그", "컨퍼런스", "샘플 코드", "기술 문서"],
+    w: { CREA: 3, TECH: 3, COMM: 2, CODE: 1 },
+    sample: null },
   { id: "sales", name: "영업", en: "Account Executive / Account Manager",
     tag: "고객과의 관계를 만들고 계약을 체결시키는 직무", stages: [1, 5],
     kpi: ["매출, Win rate, Quota 달성률", "파이프라인 규모"],
     skills: ["협상력, 관계 구축력", "압박 속에서도 흔들리지 않는 멘탈", "숫자 관리 능력"],
     signals: ["\"할당량(쿼터)\", \"잠재고객 발굴\", \"협상\"", "\"계약 체결\", \"파이프라인 관리\""],
     titles: ["Account Executive(신규 계약 중심)", "Account Manager(기존 고객 관리 중심)"],
-    w: { REL: 3, DRIVE: 3, COMM: 2, DATA: 1, STRAT: 1 },
+    keywords: ["쿼터", "잠재고객 발굴", "협상", "계약 체결", "파이프라인 관리"],
+    w: { REL: 3, DRIVE: 3, COMM: 2, DATA: 1 },
     sample: ["Anthropic — Enterprise Account Executive", "매출 목표 달성, 신규 계정 확보와 관계 확대, 영업 기회 발굴, 고객 경영진과의 컨설팅형 영업 프로세스 리드."] },
   { id: "bd", name: "사업기획 (BD)", en: "Business Development Manager / Director",
     tag: "플레이북 없는 곳에서 빅딜의 구조를 설계하는 직무", stages: [1],
@@ -406,7 +478,8 @@ const ROLES = [
     skills: ["복잡한 이해관계자 구조를 읽는 능력", "새로운 딜 구조를 설계하는 창의력", "최고경영진 레벨 관계 구축력"],
     signals: ["\"전략적 파트너십\", \"대형 계약\"", "\"신사업 개발\", \"C-level 관계\""],
     titles: ["Business Development Manager/Director", "Enterprise Development"],
-    w: { STRAT: 3, REL: 3, AMBIG: 2, CREA: 1, DRIVE: 1 },
+    keywords: ["전략적 파트너십", "대형 계약", "신사업 개발", "C-level"],
+    w: { STRAT: 3, REL: 3, AMBIG: 2, CREA: 1 },
     sample: ["BSI — Business Development Executive", "Key Account 관계 관리, 시장 정보 DB 구축, 신규 사업 이니셔티브 제안, 파이프라인 확보, 경영진 레벨 관계 구축."] },
   { id: "se", name: "세일즈 엔지니어", en: "Solutions Architect / Solutions Engineer / Presales",
     tag: "기술적으로 고객에게 확신을 주어 영업이 계약을 따내도록 돕는 직무", stages: [2],
@@ -414,7 +487,8 @@ const ROLES = [
     skills: ["발표력, 복잡한 기술을 쉽게 번역하는 능력", "짧은 시간 내 고객 니즈 파악력"],
     signals: ["\"기술 발표\", \"데모(시연)\"", "\"PoC(개념검증)\", \"제안요청서(RFP) 대응\""],
     titles: ["Solutions Architect", "Solutions Engineer", "Presales", "Presales Consultant"],
-    w: { COMM: 3, TECH: 3, DIAG: 2, STRAT: 2, REL: 2 },
+    keywords: ["기술 발표", "데모", "PoC", "RFP", "기술영업", "프리세일즈"],
+    w: { COMM: 3, REL: 3, TECH: 2, STRAT: 1 },
     sample: ["OpenAI — Solution Engineer", "pre-sales 단계의 기술 전문성 제공, 기술 요구사항 명확화, 데모·유스케이스 스코핑·PoC, 고객의 목소리(VoC) 전달."] },
   { id: "consultant", name: "컨설턴트", en: "Technical / Solution / Project Consultant",
     tag: "계약된 솔루션이 실제로 고객 환경에서 돌아가게 구축하는 직무", stages: [3],
@@ -422,15 +496,26 @@ const ROLES = [
     skills: ["프로젝트 관리 능력, 현장에서의 즉각적 문제해결력", "이해관계자 조율력"],
     signals: ["\"구축(구현)\", \"배포\"", "\"프로젝트 일정 관리\", \"이해관계자 관리\" + 제품/플랫폼 인증 요구"],
     titles: ["Technical Consultant / Solution Consultant", "Project Consultant"],
-    w: { PM: 3, DIAG: 2, TECH: 2, REL: 2, AMBIG: 1, CODE: 1 },
+    keywords: ["구축", "구현", "배포", "프로젝트 관리", "이해관계자 관리"],
+    w: { PM: 3, DIAG: 3, REL: 2, TECH: 1 },
     sample: ["AWS — Delivery Consultant, Security, Professional Services", "고객·파트너 대상 온사이트 기술 engagement, 보안·컴플라이언스 솔루션 구현, 여러 프로젝트에 걸친 hands-on implementation."] },
+  { id: "fde", name: "FDE", en: "Forward Deployed Engineer", isNew: true,
+    tag: "고객사에 직접 파견되어 현장에서 문제를 파악하고 코드로 즉시 구현하는 엔지니어", stages: [2, 3],
+    kpi: ["현장 문제의 해결·구현 속도와 고객 채택(Adoption)", "(슬라이드: 세일즈와 엔지니어링 사이 간극을 메우는 역할)"],
+    skills: ["현장 상주, 불명확한 요구사항에서의 문제 파악", "코드로 즉시 구현하는 실행력", "고객 시스템·데이터 통합 이해"],
+    signals: ["\"Forward Deployed\", \"Applied AI Engineer\", \"Deployment Solutions Engineer\"", "레거시 시스템 통합, 데이터 통합 이슈", "※ 공고의 약 30%는 세일즈 엔지니어를 FDE로 잘못 라벨링 — 실제 코딩 비중 확인 필요"],
+    titles: ["Forward Deployed Engineer", "Forward Deployed AI Engineer", "Applied AI Engineer", "Deployment Solutions Engineer"],
+    keywords: ["Forward Deployed", "Applied AI", "고객 상주", "데이터 통합", "레거시 통합"],
+    w: { CODE: 3, AMBIG: 3, REL: 2, DIAG: 1 },
+    sample: ["FDE 채용 활발 기업 (2026)", "Palantir(원조), OpenAI, Anthropic, Google, Databricks, Salesforce, Deloitte·Accenture 등. 최근 12~18개월 공고 800~1,165% 급증."] },
   { id: "support", name: "서포트 엔지니어", en: "Support Engineer / Technical Account Manager",
     tag: "이미 도입된 솔루션에서 발생하는 기술적 문제를 해결하는 직무", stages: [4],
     kpi: ["티켓 처리 시간(SLA 준수율)", "1차 해결율, 고객 만족도"],
     skills: ["트러블슈팅 능력, 문서화·매뉴얼 작성 능력", "장애 대응 시의 침착함"],
     signals: ["\"트러블슈팅\", \"티켓 처리\", \"SLA(서비스수준협약) 준수\"", "\"대기 근무\", \"L1/L2/L3 단계별 대응\""],
     titles: ["Support Engineer", "Technical Account Manager"],
-    w: { DIAG: 3, TECH: 2, STAB: 2, COMM: 1, CODE: 1 },
+    keywords: ["트러블슈팅", "티켓", "SLA", "기술지원", "L2"],
+    w: { DIAG: 3, STAB: 3, TECH: 2, COMM: 1 },
     sample: ["Datadog — Technical Support Engineer", "티켓·라이브챗·화면공유로 고객 이슈 해결, 기술 이슈 재현, 제품 데모 인증, 로테이션(주말 포함) 근무 가능."] },
   { id: "csm", name: "CSM", en: "Customer Success Manager / Client Success / Renewal Manager",
     tag: "고객이 제품을 계속 쓰고 재계약하도록 관계를 관리하는 직무", stages: [5],
@@ -438,16 +523,9 @@ const ROLES = [
     skills: ["관계 유지력, 데이터 기반 설득력(사용률·ROI 리포팅)", "장기적 신뢰 구축력"],
     signals: ["\"갱신(재계약)\", \"이탈(Churn) 방지\", \"온보딩\"", "\"QBR\", \"고객 대변인(Advocate)\""],
     titles: ["Customer Success Executive", "Client Success Manager", "Renewal Manager"],
-    w: { LONG: 3, REL: 2, DATA: 2, COMM: 1, DRIVE: 1 },
+    keywords: ["갱신", "재계약", "이탈 방지", "온보딩", "QBR"],
+    w: { LONG: 3, REL: 3, DATA: 2, COMM: 1 },
     sample: ["Microsoft — Customer Success Account Manager", "핵심 이해관계자와의 관계 관리, 고객 인시던트·에스컬레이션 end-to-end 관리, 성공 계획 수립, customer-facing consulting 경험."] },
-  { id: "fde", name: "FDE", en: "Forward Deployed Engineer", isNew: true,
-    tag: "고객사에 직접 파견되어 현장에서 문제를 파악하고 코드로 즉시 구현하는 엔지니어", stages: [2, 3],
-    kpi: ["현장 문제의 해결·구현 속도와 고객 채택(Adoption)", "(슬라이드: 세일즈와 엔지니어링 사이 간극을 메우는 역할)"],
-    skills: ["현장 상주, 불명확한 요구사항에서의 문제 파악", "코드로 즉시 구현하는 실행력", "고객 시스템·데이터 통합 이해"],
-    signals: ["\"Forward Deployed\", \"Applied AI Engineer\", \"Deployment Solutions Engineer\"", "레거시 시스템 통합, 데이터 통합 이슈", "※ 공고의 약 30%는 세일즈 엔지니어를 FDE로 잘못 라벨링 — 실제 코딩 비중 확인 필요"],
-    titles: ["Forward Deployed Engineer", "Forward Deployed AI Engineer", "Applied AI Engineer", "Deployment Solutions Engineer"],
-    w: { CODE: 3, AMBIG: 3, DIAG: 2, REL: 2, TECH: 2, COMM: 1 },
-    sample: ["FDE 채용 활발 기업 (2026)", "Palantir(원조), OpenAI, Anthropic, Google, Databricks, Salesforce, Deloitte·Accenture 등. 최근 12~18개월 공고 800~1,165% 급증."] },
 ];
 
 const ROLE_BY_ID = Object.fromEntries(ROLES.map(r => [r.id, r]));
@@ -597,9 +675,42 @@ function strengths(role, ds) {
   };
 }
 
+/* 한국 시간(Asia/Seoul) 기준 날짜. 반환: { iso: "YYYY-MM-DD", ko: "2026년 11월 25일" } */
+function kstDate(d = new Date()) {
+  const p = Object.fromEntries(new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul", year: "numeric", month: "2-digit", day: "2-digit" })
+    .formatToParts(d).filter(x => x.type !== "literal").map(x => [x.type, x.value]));
+  return { iso: `${p.year}-${p.month}-${p.day}`, ko: `${p.year}년 ${+p.month}월 ${+p.day}일` };
+}
+
+/* 채용공고 검색용 직무명: 표시용 titles에서 괄호 설명을 떼고 " / "로 나눈 뒤 중복 제거 */
+function searchTitles(roles) {
+  const seen = new Set(), out = [];
+  for (const r of roles) for (const t of r.titles)
+    for (const n of t.replace(/\([^)]*\)/g, "").split(" / ").map(x => x.trim()).filter(Boolean)) {
+      const k = n.toLowerCase(); if (!seen.has(k)) { seen.add(k); out.push(n); }
+    }
+  return out;
+}
+function searchKeywords(roles) { return [...new Set(roles.flatMap(r => r.keywords))]; }
+
+function renderProfile(list, ds) {
+  const top3 = list.slice(0, 3).map(x => x.role), st = strengths(top3[0], ds);
+  const tags = (arr, cls) => el("div", { class: "tags" }, arr.map(t => el("span", { class: "tag " + cls, text: t })));
+  const body = $("#r-profile-body"); body.replaceChildren();
+  body.append(el("h4", { text: "추천 직무 Top 3" }),
+    el("ol", { class: "profile-top" }, list.slice(0, 3).map(({ role, fit }) => el("li", {}, el("b", { text: role.name }), ` ${fit}%`))));
+  body.append(el("h4", { text: `강점 역량 (${top3[0].name} 기준)` }),
+    st.good.length ? tags(st.good.map(d => "✓ " + DIMS[d].name), "") : el("p", { class: "small muted", text: "뚜렷한 강점 역량이 아직 보이지 않아요." }));
+  body.append(el("h4", { text: "보완 역량 · 팁" }));
+  if (st.gap.length) body.append(el("ul", { class: "profile-tips" }, st.gap.map(d => el("li", { text: `${DIMS[d].name}: ${DIMS[d].tip}` }))));
+  else body.append(el("p", { class: "small muted", text: "핵심 역량에서 뚜렷한 약점이 보이지 않아요." }));
+  body.append(el("h4", { text: "채용공고에서 찾아볼 직무명" }), tags(searchTitles(top3), ""));
+  body.append(el("h4", { text: "채용공고 검색 키워드" }), tags(searchKeywords(top3), "kw"));
+}
+
 function renderResult() {
   const { ds, list } = rankRoles(answers);
-  $("#print-date").textContent = new Date().toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric" });
+  $("#print-date").textContent = kstDate().ko;
   $("#r-sub").textContent = `26개 문항 응답 결과입니다. 1순위는 "${list[0].role.name}" (${list[0].fit}%).`;
   const medals = ["1순위", "2순위", "3순위"];
   $("#r-top").replaceChildren(...list.slice(0, 3).map(({ role, fit }, i) => {
@@ -632,6 +743,7 @@ function renderResult() {
     gapBox.append(el("p", { class: "small", style: "margin-top:14px;color:var(--ink2)", text: "핵심 역량에서 뚜렷한 약점이 보이지 않아요. 실제 공고와 도감으로 직무 이해를 더 깊게 해보세요." }));
   }
 
+  renderProfile(list, ds);
   $("#r-all").replaceChildren(...list.map(({ role, fit }, i) =>
     el("div", { class: "bar-row" + (i < 3 ? " top" : "") },
       el("button", { type: "button", onclick: () => openRole(role.id), text: role.name }),
@@ -642,7 +754,48 @@ function renderResult() {
   else $("#life-note")?.remove();
 }
 
-$("#r-print").addEventListener("click", () => window.print());
+/* ───────── 결과 다운로드 (PDF·JSON) ───────── */
+
+function buildProfile() {
+  const { ds, list } = rankRoles(answers);
+  const top3 = list.slice(0, 3).map(x => x.role), st = strengths(top3[0], ds);
+  return {
+    schemaVersion: 1,
+    source: "JobFit",
+    assessedAt: kstDate().iso,
+    topRoles: list.slice(0, 3).map(({ role, fit }, i) => ({ rank: i + 1, id: role.id, name: role.name, fit })),
+    allRoles: list.map(({ role, fit }) => ({ id: role.id, name: role.name, fit })),
+    dimScores: Object.fromEntries(DIM_IDS.map(d => [d, { name: DIMS[d].name, score: ds[d] }])),
+    strengths: st.good.map(d => ({ id: d, name: DIMS[d].name })),
+    gaps: st.gap.map(d => ({ id: d, name: DIMS[d].name, tip: DIMS[d].tip })),
+    searchKeywords: { titles: searchTitles(top3), keywords: searchKeywords(top3) },
+  };
+}
+function downloadProfileJSON() {
+  const blob = new Blob([JSON.stringify(buildProfile(), null, 2)], { type: "application/json" });
+  const a = el("a", { href: URL.createObjectURL(blob), download: `jobfit-profile-${kstDate().iso.replace(/-/g, "")}.json` });
+  document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+const dlBtn = $("#r-dl"), dlMenu = $("#dl-menu");
+const dlItems = () => [...dlMenu.querySelectorAll("[role=menuitem]")];
+function setDlMenu(open, focusBtn) {
+  dlMenu.hidden = !open;
+  dlBtn.setAttribute("aria-expanded", String(open));
+  if (open) dlItems()[0].focus(); else if (focusBtn) dlBtn.focus();
+}
+dlBtn.addEventListener("click", () => setDlMenu(dlMenu.hidden));
+document.addEventListener("click", e => { if (!dlMenu.hidden && !e.target.closest(".dl-wrap")) setDlMenu(false); });
+dlMenu.addEventListener("keydown", e => {
+  const items = dlItems(), i = items.indexOf(document.activeElement);
+  if (e.key === "ArrowDown") { e.preventDefault(); items[(i + 1) % items.length].focus(); }
+  else if (e.key === "ArrowUp") { e.preventDefault(); items[(i - 1 + items.length) % items.length].focus(); }
+});
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !dlMenu.hidden) { e.stopPropagation(); setDlMenu(false, true); } });
+dlMenu.addEventListener("focusout", e => { if (!dlMenu.hidden && !e.relatedTarget?.closest?.(".dl-wrap")) setDlMenu(false); });
+$("#dl-pdf").addEventListener("click", () => { setDlMenu(false, true); setTimeout(() => window.print(), 50); });
+$("#dl-json").addEventListener("click", () => { setDlMenu(false, true); downloadProfileJSON(); });
 $("#r-retry").addEventListener("click", () => {
   answers = Array(QUESTIONS.length).fill(0); store.del(KEY); qi = 0; renderQ(); show("quiz");
 });
@@ -681,7 +834,9 @@ function openRole(id) {
       el("span", { text: DIMS[d].name }), el("div", { class: "bar" }, el("i", { style: `width:${(w / 3) * 100}%` })),
       el("span", { class: "v small", text: ["", "●", "●●", "●●●"][w] }))));
   $("#role-dims").replaceChildren(dl);
-  $("#role-sample").replaceChildren(el("div", { class: "sample" }, el("b", { text: r.sample[0] }), el("br"), r.sample[1]));
+  $("#role-sample").replaceChildren(r.sample
+    ? el("div", { class: "sample" }, el("b", { text: r.sample[0] }), el("br"), r.sample[1])
+    : el("div", { class: "sample muted", text: "채용공고 예시 준비 중입니다." }));
   if (answers.every(Boolean)) {
     const fit = rankRoles(answers).list.find(x => x.role.id === id);
     $("#role-mine").textContent = `나의 일치도: ${fit.fit}%`;
