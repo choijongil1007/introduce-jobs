@@ -107,6 +107,13 @@ main { padding: 28px 0 64px; }
 .bar i { display: block; height: 100%; background: linear-gradient(90deg, #5f93d8, var(--navy2)); border-radius: 99px; }
 .bar-row.top .bar i { background: linear-gradient(90deg, #5eead4, var(--teal-dark)); }
 .bar-row .v { text-align: right; font-weight: 700; color: var(--ink2); }
+.profile h4 { font-size: 13px; color: var(--muted); margin: 16px 0 6px; font-weight: 700; }
+.profile h4:first-of-type { margin-top: 10px; }
+.profile-top { margin: 0; padding-left: 20px; font-size: 14px; }
+.profile-top li { padding: 2px 0; }
+.profile-tips { margin: 6px 0 0; padding-left: 18px; font-size: 13.5px; color: var(--ink2); }
+.profile .tags { margin-top: 0; }
+.tag.kw { background: #eef2f7; color: var(--ink2); font-weight: 500; }
 .two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
 .radar-box { display: grid; place-items: center; }
 .dim-list { list-style: none; margin: 0; padding: 0; font-size: 14px; }
@@ -157,11 +164,25 @@ footer { text-align: center; color: var(--muted); font-size: 12.5px; padding: 0 
   .topbar, .no-print, footer { display: none !important; }
   body { background: #fff; font-size: 13px; }
   main { padding: 0; max-width: none; }
+  #v-result > * + * { margin-top: 8px; }
   .view > * + * { margin-top: 10px; }
-  .card, .rank { box-shadow: none; break-inside: avoid; padding: 14px; }
+  .card, .rank { box-shadow: none; break-inside: avoid; padding: 12px; }
+  .notice { padding: 8px 12px; font-size: 11.5px; }
+  .dim-list li { padding: 2px 0; }
+  #r-gap ul:not(.dim-list) { font-size: 12.5px !important; }
+  #r-gap ul:not(.dim-list) li:nth-child(n+3) { display: none; } /* 보완 팁 전체는 2쪽 프로필에 있음 */
+  .rank { padding: 10px 12px; }
+  .rank p { font-size: 11.5px; }
+  #r-life-card { padding: 8px 12px; }
+  #r-life-card .life { margin-top: 6px !important; }
+  .rank .tags { margin-top: 6px; }
   .print-head { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid var(--navy2); padding-bottom: 6px; }
   .print-head b { font-size: 17px; color: var(--navy); }
   .print-head span { font-size: 12px; color: var(--muted); }
+  #v-result:not([hidden]) { display: flex; flex-direction: column; }
+  #v-result > * { order: 0; }
+  #r-profile { order: 1; break-before: page; }
+  #r-all-card { order: 2; }
   .top3 { grid-template-columns: repeat(3, 1fr); gap: 10px; }
   .rank .pct { font-size: 26px; }
   .rank h3 { font-size: 16px; }
@@ -247,16 +268,21 @@ footer { text-align: center; color: var(--muted); font-size: 12.5px; padding: 0 
         <div id="r-gap" style="margin-top:12px"></div>
       </div>
     </div>
-    <div class="card">
+    <div class="card" id="r-all-card">
       <h3>전체 직무 일치도</h3>
       <p class="muted small" style="margin-bottom:8px">직무명을 누르면 도감으로 이동합니다.</p>
       <div id="r-all"></div>
     </div>
-    <div class="card">
+    <div class="card profile" id="r-profile">
+      <h3>나의 직무 프로필</h3>
+      <p class="muted small">Top 3 직무 기준으로 채용공고를 찾을 때 쓸 직무명과 키워드를 정리했습니다.</p>
+      <div id="r-profile-body"></div>
+    </div>
+    <div class="card" id="r-life-card">
       <h3>솔루션 라이프사이클에서의 위치 (1순위)</h3>
       <div class="life" id="life-result" style="margin-top:12px"></div>
     </div>
-    <p class="notice">일치도는 각 직무가 중요하게 보는 역량(슬라이드의 KPI·필요 역량·채용공고 신호 기반)에 대한 나의 응답 점수를 가중 평균한 값입니다.
+    <p class="notice" id="r-notice">일치도는 각 직무가 중요하게 보는 역량(슬라이드의 KPI·필요 역량·채용공고 신호 기반)에 대한 나의 응답 점수를 가중 평균한 값입니다.
       점수 차이가 작은 직무끼리는 우열보다 <b>둘 다 후보</b>로 보세요.</p>
     <div class="result-actions no-print">
       <button class="btn solid" id="r-print">📄 PDF로 저장</button>
@@ -634,9 +660,42 @@ function strengths(role, ds) {
   };
 }
 
+/* 한국 시간(Asia/Seoul) 기준 날짜. 반환: { iso: "YYYY-MM-DD", ko: "2026년 11월 25일" } */
+function kstDate(d = new Date()) {
+  const p = Object.fromEntries(new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul", year: "numeric", month: "2-digit", day: "2-digit" })
+    .formatToParts(d).filter(x => x.type !== "literal").map(x => [x.type, x.value]));
+  return { iso: `${p.year}-${p.month}-${p.day}`, ko: `${p.year}년 ${+p.month}월 ${+p.day}일` };
+}
+
+/* 채용공고 검색용 직무명: 표시용 titles에서 괄호 설명을 떼고 " / "로 나눈 뒤 중복 제거 */
+function searchTitles(roles) {
+  const seen = new Set(), out = [];
+  for (const r of roles) for (const t of r.titles)
+    for (const n of t.replace(/\([^)]*\)/g, "").split(" / ").map(x => x.trim()).filter(Boolean)) {
+      const k = n.toLowerCase(); if (!seen.has(k)) { seen.add(k); out.push(n); }
+    }
+  return out;
+}
+function searchKeywords(roles) { return [...new Set(roles.flatMap(r => r.keywords))]; }
+
+function renderProfile(list, ds) {
+  const top3 = list.slice(0, 3).map(x => x.role), st = strengths(top3[0], ds);
+  const tags = (arr, cls) => el("div", { class: "tags" }, arr.map(t => el("span", { class: "tag " + cls, text: t })));
+  const body = $("#r-profile-body"); body.replaceChildren();
+  body.append(el("h4", { text: "추천 직무 Top 3" }),
+    el("ol", { class: "profile-top" }, list.slice(0, 3).map(({ role, fit }) => el("li", {}, el("b", { text: role.name }), ` ${fit}%`))));
+  body.append(el("h4", { text: `강점 역량 (${top3[0].name} 기준)` }),
+    st.good.length ? tags(st.good.map(d => "✓ " + DIMS[d].name), "") : el("p", { class: "small muted", text: "뚜렷한 강점 역량이 아직 보이지 않아요." }));
+  body.append(el("h4", { text: "보완 역량 · 팁" }));
+  if (st.gap.length) body.append(el("ul", { class: "profile-tips" }, st.gap.map(d => el("li", { text: `${DIMS[d].name}: ${DIMS[d].tip}` }))));
+  else body.append(el("p", { class: "small muted", text: "핵심 역량에서 뚜렷한 약점이 보이지 않아요." }));
+  body.append(el("h4", { text: "채용공고에서 찾아볼 직무명" }), tags(searchTitles(top3), ""));
+  body.append(el("h4", { text: "채용공고 검색 키워드" }), tags(searchKeywords(top3), "kw"));
+}
+
 function renderResult() {
   const { ds, list } = rankRoles(answers);
-  $("#print-date").textContent = new Date().toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric" });
+  $("#print-date").textContent = kstDate().ko;
   $("#r-sub").textContent = `26개 문항 응답 결과입니다. 1순위는 "${list[0].role.name}" (${list[0].fit}%).`;
   const medals = ["1순위", "2순위", "3순위"];
   $("#r-top").replaceChildren(...list.slice(0, 3).map(({ role, fit }, i) => {
@@ -669,6 +728,7 @@ function renderResult() {
     gapBox.append(el("p", { class: "small", style: "margin-top:14px;color:var(--ink2)", text: "핵심 역량에서 뚜렷한 약점이 보이지 않아요. 실제 공고와 도감으로 직무 이해를 더 깊게 해보세요." }));
   }
 
+  renderProfile(list, ds);
   $("#r-all").replaceChildren(...list.map(({ role, fit }, i) =>
     el("div", { class: "bar-row" + (i < 3 ? " top" : "") },
       el("button", { type: "button", onclick: () => openRole(role.id), text: role.name }),
