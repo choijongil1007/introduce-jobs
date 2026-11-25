@@ -372,7 +372,8 @@ const QUESTIONS = [
 const SCALE = [["1", "전혀 아님"], ["2", "아님"], ["3", "보통"], ["4", "그런 편"], ["5", "매우 그럼"]];
 
 /*
- 직무 정의. w: 차원별 중요도(0~3). 슬라이드의 KPI/필요 역량/채용공고 신호를 근거로 설정.
+ 직무 정의. w: 차원별 중요도. 모든 직무 4개 차원, 3·3·2·1(합 9)로 통일.
+ 슬라이드의 KPI/필요 역량/채용공고 신호를 근거로 설정.
  stages: LIFE 인덱스. sample: 슬라이드의 채용공고 예시.
 */
 const ROLES = [
@@ -392,7 +393,7 @@ const ROLES = [
     signals: ["\"제품 기획\", \"로드맵\", \"요구사항 정의\"", "\"사용자 리서치\", \"우선순위\""],
     titles: ["Product Manager", "Product Owner", "서비스 기획자"],
     keywords: ["제품 기획", "로드맵", "요구사항 정의", "사용자 리서치", "우선순위"],
-    w: { STRAT: 3, PM: 2, COMM: 2, AMBIG: 1, DATA: 1 },
+    w: { STRAT: 3, PM: 3, COMM: 2, AMBIG: 1 },
     sample: null },
   { id: "data", name: "데이터 분석가", en: "Data Analyst / Data Scientist", isNew: true,
     tag: "데이터로 현상을 설명하고 의사결정의 근거를 만드는 직무", stages: [],
@@ -401,7 +402,7 @@ const ROLES = [
     signals: ["\"SQL\", \"A/B 테스트\", \"지표 설계\"", "\"대시보드\", \"데이터 파이프라인\""],
     titles: ["Data Analyst", "Data Scientist", "Business Analyst", "Product Analyst"],
     keywords: ["SQL", "Python", "A/B 테스트", "지표 설계", "대시보드", "데이터 파이프라인"],
-    w: { DATA: 3, TECH: 2, DIAG: 1, COMM: 1 },
+    w: { DATA: 3, TECH: 3, DIAG: 2, COMM: 1 },
     sample: null },
   { id: "marketing", name: "마케팅", en: "Growth / Content / Demand Gen Marketer",
     tag: "고객에게 문제 인식을 심고 브랜드 신뢰를 쌓아 파이프라인을 채우는 직무", stages: [1],
@@ -410,7 +411,7 @@ const ROLES = [
     signals: ["\"리드 제너레이션\", \"퍼널 최적화\"", "\"캠페인 기획\", \"브랜드 포지셔닝\""],
     titles: ["Growth Marketer(성과·전환 중심)", "Content Marketer", "Demand Gen Marketer(파이프라인 중심)"],
     keywords: ["리드 제너레이션", "퍼널", "캠페인 기획", "브랜드 포지셔닝", "B2B 마케팅"],
-    w: { CREA: 3, DATA: 2, COMM: 2, DRIVE: 1, STRAT: 1 },
+    w: { CREA: 3, DATA: 3, COMM: 2, DRIVE: 1 },
     sample: ["OpenAI — B2B Marketing Lead, Korea", "B2B 마케팅 플랜 수립, full-funnel 프로그램, Korea Country/GTM·파트너와 협업, pipeline growth 지원."] },
   { id: "devrel", name: "DevRel", en: "Developer Relations / Developer Advocate", isNew: true,
     tag: "개발자에게 제품을 알리고 써보게 만들어 생태계를 키우는 직무", stages: [1, 2],
@@ -419,7 +420,7 @@ const ROLES = [
     signals: ["\"Developer Advocate\", \"Developer Experience\"", "\"기술 블로그\", \"컨퍼런스 발표\", \"샘플 코드\""],
     titles: ["Developer Relations", "Developer Advocate", "Developer Evangelist", "Technical Writer"],
     keywords: ["개발자 커뮤니티", "기술 블로그", "컨퍼런스", "샘플 코드", "기술 문서"],
-    w: { COMM: 3, TECH: 3, CREA: 2, CODE: 1 },
+    w: { CREA: 3, TECH: 3, COMM: 2, CODE: 1 },
     sample: null },
   { id: "sales", name: "영업", en: "Account Executive / Account Manager",
     tag: "고객과의 관계를 만들고 계약을 체결시키는 직무", stages: [1, 5],
@@ -428,7 +429,7 @@ const ROLES = [
     signals: ["\"할당량(쿼터)\", \"잠재고객 발굴\", \"협상\"", "\"계약 체결\", \"파이프라인 관리\""],
     titles: ["Account Executive(신규 계약 중심)", "Account Manager(기존 고객 관리 중심)"],
     keywords: ["쿼터", "잠재고객 발굴", "협상", "계약 체결", "파이프라인 관리"],
-    w: { REL: 3, DRIVE: 3, COMM: 2, DATA: 1, STRAT: 1 },
+    w: { REL: 3, DRIVE: 3, COMM: 2, DATA: 1 },
     sample: ["Anthropic — Enterprise Account Executive", "매출 목표 달성, 신규 계정 확보와 관계 확대, 영업 기회 발굴, 고객 경영진과의 컨설팅형 영업 프로세스 리드."] },
   { id: "bd", name: "사업기획 (BD)", en: "Business Development Manager / Director",
     tag: "플레이북 없는 곳에서 빅딜의 구조를 설계하는 직무", stages: [1],
@@ -437,7 +438,7 @@ const ROLES = [
     signals: ["\"전략적 파트너십\", \"대형 계약\"", "\"신사업 개발\", \"C-level 관계\""],
     titles: ["Business Development Manager/Director", "Enterprise Development"],
     keywords: ["전략적 파트너십", "대형 계약", "신사업 개발", "C-level"],
-    w: { STRAT: 3, REL: 3, AMBIG: 2, CREA: 1, DRIVE: 1 },
+    w: { STRAT: 3, REL: 3, AMBIG: 2, CREA: 1 },
     sample: ["BSI — Business Development Executive", "Key Account 관계 관리, 시장 정보 DB 구축, 신규 사업 이니셔티브 제안, 파이프라인 확보, 경영진 레벨 관계 구축."] },
   { id: "se", name: "세일즈 엔지니어", en: "Solutions Architect / Solutions Engineer / Presales",
     tag: "기술적으로 고객에게 확신을 주어 영업이 계약을 따내도록 돕는 직무", stages: [2],
@@ -446,7 +447,7 @@ const ROLES = [
     signals: ["\"기술 발표\", \"데모(시연)\"", "\"PoC(개념검증)\", \"제안요청서(RFP) 대응\""],
     titles: ["Solutions Architect", "Solutions Engineer", "Presales", "Presales Consultant"],
     keywords: ["기술 발표", "데모", "PoC", "RFP", "기술영업", "프리세일즈"],
-    w: { COMM: 3, TECH: 3, DIAG: 2, STRAT: 2, REL: 2 },
+    w: { COMM: 3, REL: 3, TECH: 2, STRAT: 1 },
     sample: ["OpenAI — Solution Engineer", "pre-sales 단계의 기술 전문성 제공, 기술 요구사항 명확화, 데모·유스케이스 스코핑·PoC, 고객의 목소리(VoC) 전달."] },
   { id: "consultant", name: "컨설턴트", en: "Technical / Solution / Project Consultant",
     tag: "계약된 솔루션이 실제로 고객 환경에서 돌아가게 구축하는 직무", stages: [3],
@@ -455,7 +456,7 @@ const ROLES = [
     signals: ["\"구축(구현)\", \"배포\"", "\"프로젝트 일정 관리\", \"이해관계자 관리\" + 제품/플랫폼 인증 요구"],
     titles: ["Technical Consultant / Solution Consultant", "Project Consultant"],
     keywords: ["구축", "구현", "배포", "프로젝트 관리", "이해관계자 관리"],
-    w: { PM: 3, DIAG: 2, TECH: 2, REL: 2, AMBIG: 1, CODE: 1 },
+    w: { PM: 3, DIAG: 3, REL: 2, TECH: 1 },
     sample: ["AWS — Delivery Consultant, Security, Professional Services", "고객·파트너 대상 온사이트 기술 engagement, 보안·컴플라이언스 솔루션 구현, 여러 프로젝트에 걸친 hands-on implementation."] },
   { id: "fde", name: "FDE", en: "Forward Deployed Engineer", isNew: true,
     tag: "고객사에 직접 파견되어 현장에서 문제를 파악하고 코드로 즉시 구현하는 엔지니어", stages: [2, 3],
@@ -464,7 +465,7 @@ const ROLES = [
     signals: ["\"Forward Deployed\", \"Applied AI Engineer\", \"Deployment Solutions Engineer\"", "레거시 시스템 통합, 데이터 통합 이슈", "※ 공고의 약 30%는 세일즈 엔지니어를 FDE로 잘못 라벨링 — 실제 코딩 비중 확인 필요"],
     titles: ["Forward Deployed Engineer", "Forward Deployed AI Engineer", "Applied AI Engineer", "Deployment Solutions Engineer"],
     keywords: ["Forward Deployed", "Applied AI", "고객 상주", "데이터 통합", "레거시 통합"],
-    w: { CODE: 3, AMBIG: 3, DIAG: 2, REL: 2, TECH: 2, COMM: 1 },
+    w: { CODE: 3, AMBIG: 3, REL: 2, DIAG: 1 },
     sample: ["FDE 채용 활발 기업 (2026)", "Palantir(원조), OpenAI, Anthropic, Google, Databricks, Salesforce, Deloitte·Accenture 등. 최근 12~18개월 공고 800~1,165% 급증."] },
   { id: "support", name: "서포트 엔지니어", en: "Support Engineer / Technical Account Manager",
     tag: "이미 도입된 솔루션에서 발생하는 기술적 문제를 해결하는 직무", stages: [4],
@@ -473,7 +474,7 @@ const ROLES = [
     signals: ["\"트러블슈팅\", \"티켓 처리\", \"SLA(서비스수준협약) 준수\"", "\"대기 근무\", \"L1/L2/L3 단계별 대응\""],
     titles: ["Support Engineer", "Technical Account Manager"],
     keywords: ["트러블슈팅", "티켓", "SLA", "기술지원", "L2"],
-    w: { DIAG: 3, TECH: 2, STAB: 2, COMM: 1, CODE: 1 },
+    w: { DIAG: 3, STAB: 3, TECH: 2, COMM: 1 },
     sample: ["Datadog — Technical Support Engineer", "티켓·라이브챗·화면공유로 고객 이슈 해결, 기술 이슈 재현, 제품 데모 인증, 로테이션(주말 포함) 근무 가능."] },
   { id: "csm", name: "CSM", en: "Customer Success Manager / Client Success / Renewal Manager",
     tag: "고객이 제품을 계속 쓰고 재계약하도록 관계를 관리하는 직무", stages: [5],
@@ -482,7 +483,7 @@ const ROLES = [
     signals: ["\"갱신(재계약)\", \"이탈(Churn) 방지\", \"온보딩\"", "\"QBR\", \"고객 대변인(Advocate)\""],
     titles: ["Customer Success Executive", "Client Success Manager", "Renewal Manager"],
     keywords: ["갱신", "재계약", "이탈 방지", "온보딩", "QBR"],
-    w: { LONG: 3, REL: 2, DATA: 2, COMM: 1, DRIVE: 1 },
+    w: { LONG: 3, REL: 3, DATA: 2, COMM: 1 },
     sample: ["Microsoft — Customer Success Account Manager", "핵심 이해관계자와의 관계 관리, 고객 인시던트·에스컬레이션 end-to-end 관리, 성공 계획 수립, customer-facing consulting 경험."] },
 ];
 
