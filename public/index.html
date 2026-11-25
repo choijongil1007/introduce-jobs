@@ -107,6 +107,15 @@ main { padding: 28px 0 64px; }
 .bar i { display: block; height: 100%; background: linear-gradient(90deg, #5f93d8, var(--navy2)); border-radius: 99px; }
 .bar-row.top .bar i { background: linear-gradient(90deg, #5eead4, var(--teal-dark)); }
 .bar-row .v { text-align: right; font-weight: 700; color: var(--ink2); }
+.dl-wrap { position: relative; }
+.dl-menu { position: absolute; z-index: 20; top: calc(100% + 6px); left: 0; width: 300px; max-width: calc(100vw - 40px);
+  background: #fff; border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 8px 24px rgba(15,35,65,.18); padding: 6px; }
+.dl-menu[hidden] { display: none; }
+.dl-menu button { all: unset; box-sizing: border-box; display: block; width: 100%; padding: 10px 12px; border-radius: 8px; cursor: pointer; }
+.dl-menu button:hover, .dl-menu button:focus-visible { background: var(--blue-weak); }
+.dl-menu button:focus-visible { outline: 2px solid var(--blue); }
+.dl-menu b { display: block; font-size: 14px; color: var(--ink); }
+.dl-menu small { display: block; margin-top: 2px; font-size: 12.5px; color: var(--muted); line-height: 1.4; }
 .profile h4 { font-size: 13px; color: var(--muted); margin: 16px 0 6px; font-weight: 700; }
 .profile h4:first-of-type { margin-top: 10px; }
 .profile-top { margin: 0; padding-left: 20px; font-size: 14px; }
@@ -285,7 +294,13 @@ footer { text-align: center; color: var(--muted); font-size: 12.5px; padding: 0 
     <p class="notice" id="r-notice">일치도는 각 직무가 중요하게 보는 역량(슬라이드의 KPI·필요 역량·채용공고 신호 기반)에 대한 나의 응답 점수를 가중 평균한 값입니다.
       점수 차이가 작은 직무끼리는 우열보다 <b>둘 다 후보</b>로 보세요.</p>
     <div class="result-actions no-print">
-      <button class="btn solid" id="r-print">📄 PDF로 저장</button>
+      <div class="dl-wrap">
+        <button class="btn solid" id="r-dl" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="dl-menu">⬇ 결과 다운로드</button>
+        <div class="dl-menu" id="dl-menu" role="menu" aria-label="다운로드 형식" hidden>
+          <button type="button" role="menuitem" id="dl-pdf"><b>📄 PDF</b><small>결과지 (인쇄 창이 열리면 'PDF로 저장'을 선택하세요)</small></button>
+          <button type="button" role="menuitem" id="dl-json"><b>{ } JSON</b><small>직무 프로필 데이터 (구직 앱 연결용)</small></button>
+        </div>
+      </div>
       <button class="btn line" id="r-copy">결과 링크 복사</button>
       <button class="btn line" id="r-retry">다시 진단하기</button>
       <button class="btn line" data-go="atlas">직무 도감 보기</button>
@@ -739,7 +754,48 @@ function renderResult() {
   else $("#life-note")?.remove();
 }
 
-$("#r-print").addEventListener("click", () => window.print());
+/* ───────── 결과 다운로드 (PDF·JSON) ───────── */
+
+function buildProfile() {
+  const { ds, list } = rankRoles(answers);
+  const top3 = list.slice(0, 3).map(x => x.role), st = strengths(top3[0], ds);
+  return {
+    schemaVersion: 1,
+    source: "JobFit",
+    assessedAt: kstDate().iso,
+    topRoles: list.slice(0, 3).map(({ role, fit }, i) => ({ rank: i + 1, id: role.id, name: role.name, fit })),
+    allRoles: list.map(({ role, fit }) => ({ id: role.id, name: role.name, fit })),
+    dimScores: Object.fromEntries(DIM_IDS.map(d => [d, { name: DIMS[d].name, score: ds[d] }])),
+    strengths: st.good.map(d => ({ id: d, name: DIMS[d].name })),
+    gaps: st.gap.map(d => ({ id: d, name: DIMS[d].name, tip: DIMS[d].tip })),
+    searchKeywords: { titles: searchTitles(top3), keywords: searchKeywords(top3) },
+  };
+}
+function downloadProfileJSON() {
+  const blob = new Blob([JSON.stringify(buildProfile(), null, 2)], { type: "application/json" });
+  const a = el("a", { href: URL.createObjectURL(blob), download: `jobfit-profile-${kstDate().iso.replace(/-/g, "")}.json` });
+  document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+const dlBtn = $("#r-dl"), dlMenu = $("#dl-menu");
+const dlItems = () => [...dlMenu.querySelectorAll("[role=menuitem]")];
+function setDlMenu(open, focusBtn) {
+  dlMenu.hidden = !open;
+  dlBtn.setAttribute("aria-expanded", String(open));
+  if (open) dlItems()[0].focus(); else if (focusBtn) dlBtn.focus();
+}
+dlBtn.addEventListener("click", () => setDlMenu(dlMenu.hidden));
+document.addEventListener("click", e => { if (!dlMenu.hidden && !e.target.closest(".dl-wrap")) setDlMenu(false); });
+dlMenu.addEventListener("keydown", e => {
+  const items = dlItems(), i = items.indexOf(document.activeElement);
+  if (e.key === "ArrowDown") { e.preventDefault(); items[(i + 1) % items.length].focus(); }
+  else if (e.key === "ArrowUp") { e.preventDefault(); items[(i - 1 + items.length) % items.length].focus(); }
+});
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !dlMenu.hidden) { e.stopPropagation(); setDlMenu(false, true); } });
+dlMenu.addEventListener("focusout", e => { if (!dlMenu.hidden && !e.relatedTarget?.closest?.(".dl-wrap")) setDlMenu(false); });
+$("#dl-pdf").addEventListener("click", () => { setDlMenu(false, true); setTimeout(() => window.print(), 50); });
+$("#dl-json").addEventListener("click", () => { setDlMenu(false, true); downloadProfileJSON(); });
 $("#r-retry").addEventListener("click", () => {
   answers = Array(QUESTIONS.length).fill(0); store.del(KEY); qi = 0; renderQ(); show("quiz");
 });

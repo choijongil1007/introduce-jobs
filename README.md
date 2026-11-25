@@ -7,6 +7,12 @@
 - 직무 도감(12개): SW·AI 엔지니어 / PM / 데이터 분석가 / 마케팅 / DevRel / 영업 / BD / 세일즈 엔지니어 / 컨설턴트 / FDE / 서포트 엔지니어 / CSM
 - 각 직무에는 채용공고 검색용 `keywords`(짧은 단어 배열)가 있습니다. 화면 표시용 `signals`와 별개로, 직무 프로필 내보내기(JSON·PDF)에서 검색 키워드로 쓰입니다.
 
+## 결과 내려받기
+결과 화면의 **[⬇ 결과 다운로드]** 버튼에서 형식을 고릅니다 (모두 브라우저 안에서 처리되며 서버로 전송되지 않습니다).
+- **PDF**: 결과지(A4 2쪽). 브라우저 인쇄 창에서 'PDF로 저장'을 선택합니다.
+- **JSON** (`jobfit-profile-YYYYMMDD.json`, 날짜는 한국 시간): 구직 자동화 앱의 입력값으로 쓰는 직무 프로필.
+  `schemaVersion`, `assessedAt`, `topRoles`, `allRoles`, `dimScores`, `strengths`, `gaps`, `searchKeywords`(Top 3 직무의 직무명·`keywords`)를 담습니다. 이름·연락처 등 개인정보는 포함하지 않습니다.
+
 ## 데이터 저장 원칙
 - 진단 응답과 결과는 사용자 브라우저(localStorage)에만 저장됩니다.
 - 서버·DB로 응답이나 결과를 보내지 않습니다.
