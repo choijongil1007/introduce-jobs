@@ -376,15 +376,24 @@ const SCALE = [["1", "전혀 아님"], ["2", "아님"], ["3", "보통"], ["4", "
  stages: LIFE 인덱스. sample: 슬라이드의 채용공고 예시.
 */
 const ROLES = [
-  { id: "rnd", name: "R&D · Product", en: "R&D / Solution Engineer / Product Owner / Product Manager",
+  { id: "eng", name: "SW·AI 엔지니어", en: "Software Engineer / AI Engineer / ML Engineer",
     tag: "고객의 요구를 실제로 동작하는 제품·기능으로 개발하는 직무", stages: [0],
     kpi: ["출시 일정 준수, 코드 품질(버그율·장애율), 기술 부채 관리"],
     skills: ["솔루션 설계·코딩 능력", "문제 해결을 위한 논리적 사고", "코드리뷰 등 협업 능력"],
     signals: ["\"구축\", \"개발\", \"코드 리뷰\"", "구체적 기술스택(언어/프레임워크)", "\"고객\" 언급 거의 없음"],
-    titles: ["R&D", "Solution Engineer", "Product Owner", "Product Manager"],
+    titles: ["Software Engineer", "AI Engineer", "ML Engineer", "Backend/Frontend Engineer", "Solution Engineer(개발)"],
     keywords: ["개발", "코드 리뷰", "백엔드", "프론트엔드", "머신러닝", "LLM"],
-    w: { CODE: 3, TECH: 3, DIAG: 2, PM: 1, STAB: 1 },
+    w: { CODE: 3, TECH: 3, DIAG: 2, STAB: 1 },
     sample: ["GE — Staff Software Engineer", "복잡한 소프트웨어 시스템의 설계·개발, 아키텍처 의사결정, 엔지니어링 베스트 프랙티스·코딩 표준 수립, C++/C# 등 객체지향 경험."] },
+  { id: "pm", name: "PM", en: "Product Manager / Product Owner",
+    tag: "고객과 시장의 문제를 정의하고 무엇을 만들지 결정해 제품을 성공으로 이끄는 직무", stages: [0],
+    kpi: ["제품 로드맵 달성, 출시 후 사용자 지표(활성·리텐션)", "이해관계자 정렬과 일정 준수"],
+    skills: ["문제 정의와 우선순위 판단", "엔지니어·디자이너·현업과의 조율·소통", "사용자 리서치와 데이터 해석"],
+    signals: ["\"제품 기획\", \"로드맵\", \"요구사항 정의\"", "\"사용자 리서치\", \"우선순위\""],
+    titles: ["Product Manager", "Product Owner", "서비스 기획자"],
+    keywords: ["제품 기획", "로드맵", "요구사항 정의", "사용자 리서치", "우선순위"],
+    w: { STRAT: 3, PM: 2, COMM: 2, AMBIG: 1, DATA: 1 },
+    sample: null },
   { id: "marketing", name: "마케팅", en: "Growth / Content / Demand Gen Marketer",
     tag: "고객에게 문제 인식을 심고 브랜드 신뢰를 쌓아 파이프라인을 채우는 직무", stages: [1],
     kpi: ["리드 수(MQL), 리드 품질(전환율)", "브랜드 인지도, 캠페인 ROI"],
@@ -690,7 +699,9 @@ function openRole(id) {
       el("span", { text: DIMS[d].name }), el("div", { class: "bar" }, el("i", { style: `width:${(w / 3) * 100}%` })),
       el("span", { class: "v small", text: ["", "●", "●●", "●●●"][w] }))));
   $("#role-dims").replaceChildren(dl);
-  $("#role-sample").replaceChildren(el("div", { class: "sample" }, el("b", { text: r.sample[0] }), el("br"), r.sample[1]));
+  $("#role-sample").replaceChildren(r.sample
+    ? el("div", { class: "sample" }, el("b", { text: r.sample[0] }), el("br"), r.sample[1])
+    : el("div", { class: "sample muted", text: "채용공고 예시 준비 중입니다." }));
   if (answers.every(Boolean)) {
     const fit = rankRoles(answers).list.find(x => x.role.id === id);
     $("#role-mine").textContent = `나의 일치도: ${fit.fit}%`;
